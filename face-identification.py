@@ -15,17 +15,20 @@ net = cv2.dnn.readNetFromCaffe(prototextPath, caffeModel)
 cap = cv2.VideoCapture(0)
 
 curr_id = 0
-label_ids = {}
+labelToId = {}
+idToLabel = {}
 train_x = []
 train_y = []
+recognizer = cv2.face.LBPHFaceRecognizer_create()
 
 for root, dirs, files in os.walk(image_dir):
     for file in files:
         if file.endswith("png") or file.endswith("jpg") or file.endswith("jpeg"):
             path = os.path.join(root, file)
-            label = os.path.basename(root).replace(" ", "-").lower()
-            if label_ids.get(label) is None:
-                label_ids[label] = curr_id
+            label = os.path.basename(root).lower()
+            idToLabel[curr_id] = label
+            if labelToId.get(label) is None:
+                labelToId[label] = curr_id
                 curr_id += 1
             image = cv2.imread(path)
             h, w = image.shape[:2]
@@ -36,23 +39,20 @@ for root, dirs, files in os.walk(image_dir):
             if confidence >= 0.5:
                 box = detections[0, 0, 0, 3:7] * np.array([w, h, w, h])
                 startX, startY, endX, endY = box.astype("int")
-                # print(startX, startY, endX, endY)
-                # text = "{:.2f}%".format(confidence * 100)
-                # y = startY - 10 if startY - 10 > 10 else startY + 10
-                # cv2.rectangle(image, (startX, startY), (endX, endY), (0, 0, 255), 2)
-                # cv2.putText(image, text, (startX, y), cv2.FONT_HERSHEY_SIMPLEX, 0.45, (0, 0, 255), 2)
                 pil_image = Image.open(path).convert("L")
+                # final_image = pil_image.resize((150, 150), Image.LANCZOS)
                 image_array = np.array(pil_image, "uint8")
                 roi = image_array[startY:endY, startX:endX]
                 train_x.append(roi)
-                train_y.append(label_ids[label])
-                print(file)
-            # cv2.imshow("Output", image)
-            # cv2.waitKey(0)
+                train_y.append(labelToId[label])
+
+recognizer.train(train_x, np.array(train_y))
 
 while True:
     _, frame = cap.read()
     frame = imutils.resize(frame, width=700)
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    gray = imutils.resize(gray, width=700)
     h, w = frame.shape[:2]
     blob = cv2.dnn.blobFromImage(cv2.resize(frame, (300, 300)), 1.0, (300, 300), (104.0, 177.0, 123.0))
     net.setInput(blob)
@@ -62,10 +62,14 @@ while True:
         if confidence >= 0.5:
             box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
             startX, startY, endX, endY = box.astype("int")
-            text = "{:.2f}%".format(confidence * 100)
-            y = startY - 10 if startY - 10 > 10 else startY + 10
-            cv2.rectangle(frame, (startX, startY), (endX, endY), (255, 0, 0), 2)
-            cv2.putText(frame, text, (startX, y), cv2.FONT_HERSHEY_SIMPLEX, 0.45, (255, 0, 0), 2)
+            roi_gray = gray[startY:endY, startX:endX]
+            pred = recognizer.predict(roi_gray)
+            pred_label = idToLabel[pred[0]]
+            pred_confidence = pred[1]
+            cv2.rectangle(frame, (startX, startY), (endX, endY), (0, 255, 0), 1)
+            if pred_confidence >= 0.5:
+                y = startY - 10 if startY - 10 > 10 else startY + 10
+                cv2.putText(frame, pred_label, (startX, y), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
     cv2.imshow("Face Identification", frame)
     if cv2.waitKey(20) & 0xFF == ord('q'):
         break
