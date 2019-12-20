@@ -5,21 +5,21 @@ import cv2
 import pickle
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-model_dir = os.path.join(BASE_DIR, 'model')
+caffe_model_dir = os.path.join(BASE_DIR, "caffe_model")
 
-caffeModel = os.path.join(model_dir, 'res10_300x300_ssd_iter_140000.caffemodel')
-prototextPath = os.path.join(model_dir, 'deploy.prototxt.txt')
+caffeModel = os.path.join(caffe_model_dir, "res10_300x300_ssd_iter_140000.caffemodel")
+prototextPath = os.path.join(caffe_model_dir, "deploy.prototxt.txt")
 
 net = cv2.dnn.readNetFromCaffe(prototextPath, caffeModel)
 cap = cv2.VideoCapture(0)
 
 idToLabel = {}
-with open("labels.pickle", "rb") as f:
+with open(os.path.join(BASE_DIR, "labels.pickle"), "rb") as f:
     labelToId = pickle.load(f)
     idToLabel = {v: k for k, v in labelToId.items()}
 
 recognizer = cv2.face.LBPHFaceRecognizer_create()
-recognizer.read("model.yml")
+recognizer.read(os.path.join(BASE_DIR, "model.yml"))
 
 while True:
     _, frame = cap.read()

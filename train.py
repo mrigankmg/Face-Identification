@@ -6,10 +6,10 @@ from PIL import Image
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 image_dir = os.path.join(BASE_DIR, "imgs")
-model_dir = os.path.join(BASE_DIR, 'model')
+caffe_model_dir = os.path.join(BASE_DIR, "caffe_model")
 
-caffeModel = os.path.join(model_dir, 'res10_300x300_ssd_iter_140000.caffemodel')
-prototextPath = os.path.join(model_dir, 'deploy.prototxt.txt')
+caffeModel = os.path.join(caffe_model_dir, "res10_300x300_ssd_iter_140000.caffemodel")
+prototextPath = os.path.join(caffe_model_dir, "deploy.prototxt.txt")
 
 net = cv2.dnn.readNetFromCaffe(prototextPath, caffeModel)
 
@@ -44,8 +44,8 @@ for root, dirs, files in os.walk(image_dir):
                 train_x.append(roi)
                 train_y.append(labelToId[label])
 
-with open("labels.pickle", "wb") as f:
+with open(os.path.join(BASE_DIR, "labels.pickle"), "wb") as f:
     pickle.dump(labelToId, f)
 
 recognizer.train(train_x, np.array(train_y))
-recognizer.save("model.yml")
+recognizer.save(os.path.join(BASE_DIR, "model.yml"))
