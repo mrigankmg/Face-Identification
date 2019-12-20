@@ -41,7 +41,7 @@ for root, dirs, files in os.walk(image_dir):
                 image_array = np.array(pil_image, "uint8")
                 roi_gray = image_array[startY:endY, startX:endX]
                 cv2.imwrite("curr.jpg", roi_gray)
-                pil_image = Image.open("curr.jpg").convert("L")
+                pil_image = Image.open("curr.jpg")
                 final_image = pil_image.resize((350, 350), Image.ANTIALIAS)
                 image_array = np.array(final_image, "uint8")
                 train_x.append(image_array)
