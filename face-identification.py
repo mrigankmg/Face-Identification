@@ -43,7 +43,7 @@ while True:
             cv2.rectangle(frame, (startX, startY), (endX, endY), (0, 255, 0), 1)
             if pred_confidence >= 0.65:
                 y = startY - 10 if startY - 10 > 10 else startY + 10
-                cv2.putText(frame, pred_label, (startX, y), cv2.FONT_HERSHEY_DUPLEX, 0.6, (0, 255, 0), 2)
+                cv2.putText(frame, pred_label, (startX, y), cv2.FONT_HERSHEY_COMPLEX, 0.6, (0, 255, 0), 2)
     cv2.imshow("Face Identification", frame)
     if cv2.waitKey(20) & 0xFF == ord('q'):
         break
