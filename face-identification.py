@@ -35,12 +35,13 @@ while True:
         if confidence >= 0.5:
             box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
             startX, startY, endX, endY = box.astype("int")
-            roi_gray = gray[startY:endY, startX:endX]
-            pred = recognizer.predict(roi_gray)
+            roi = gray[startY:endY, startX:endX]
+            roi = cv2.resize(roi, (64, 64))
+            pred = recognizer.predict(roi)
             pred_label = idToLabel[pred[0]]
             pred_confidence = pred[1]
             cv2.rectangle(frame, (startX, startY), (endX, endY), (0, 255, 0), 1)
-            if pred_confidence >= 0.5:
+            if pred_confidence >= 0.65:
                 y = startY - 10 if startY - 10 > 10 else startY + 10
                 cv2.putText(frame, pred_label, (startX, y), cv2.FONT_HERSHEY_DUPLEX, 0.6, (0, 255, 0), 2)
     cv2.imshow("Face Identification", frame)

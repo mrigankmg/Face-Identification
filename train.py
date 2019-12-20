@@ -39,15 +39,10 @@ for root, dirs, files in os.walk(image_dir):
                 startX, startY, endX, endY = box.astype("int")
                 pil_image = Image.open(path).convert("L")
                 image_array = np.array(pil_image, "uint8")
-                roi_gray = image_array[startY:endY, startX:endX]
-                cv2.imwrite("curr.jpg", roi_gray)
-                pil_image = Image.open("curr.jpg")
-                final_image = pil_image.resize((300, 300), Image.ANTIALIAS)
-                image_array = np.array(final_image, "uint8")
-                train_x.append(image_array)
+                roi = image_array[startY:endY, startX:endX]
+                roi = cv2.resize(roi, (64, 64))
+                train_x.append(roi)
                 train_y.append(labelToId[label])
-
-os.remove("curr.jpg")
 
 with open("labels.pickle", "wb") as f:
     pickle.dump(labelToId, f)
