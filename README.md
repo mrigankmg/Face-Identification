@@ -18,6 +18,7 @@ Instructions:
 |  |  |__3.jpg ...<br/>
 ...<br/><br/>
 - Install any missing libraries.
-- run `python train.py`
-- run `python face-detection.py`
+- Open terminal.
+- Run `python train.py`
+- Run `python face-detection.py`
 - Enjoy!
