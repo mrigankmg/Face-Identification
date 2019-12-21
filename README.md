@@ -12,7 +12,7 @@ Instructions:
 |&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;|__1.jpg<br/>
 |&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;|__2.jpg<br/>
 |&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;|__3.jpg ...<br/>
-|&nbsp;&nbsp;|__alice white<br/>
+|&nbsp;&nbsp;&nbsp;|__alice white<br/>
 |&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;|__1.jpg<br/>
 |&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;|__2.jpg<br/>
 |&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;|__3.jpg ...<br/>
