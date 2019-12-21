@@ -4,7 +4,7 @@ Instructions:
 - Save all training images in "imgs" folder in "face-identification".
 - For each person, create a different directory with their name as the name of the directory as follows:<br/><br/>
 |__face-identification<br/>
-|&nbsp;&nbsp;|__john doe<br/>
+|&nbsp;&nbsp;&nbsp;|__john doe<br/>
 |&nbsp;&nbsp;|&nbsp;&nbsp;|__1.jpg<br/>
 |&nbsp;&nbsp;|&nbsp;&nbsp;|__2.jpg<br/>
 |&nbsp;&nbsp;|&nbsp;&nbsp;|__3.jpg ...<br/>
